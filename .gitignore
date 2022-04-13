@@ -1,0 +1,20 @@
+# git
+!/**/.gitkeep
+
+# Package manager
+**/vendor/**
+**/node_modules/**
+**/npm-debug.log
+**/yarn-error.log
+
+# IDEs
+**/.idea/**
+**/.vscode/**
+
+# Environmnent
+**/.env
+**/.env*
+**/!.env.example
+
+# Files
+WIKI.md
