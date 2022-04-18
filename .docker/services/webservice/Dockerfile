@@ -4,7 +4,6 @@ FROM ubuntu:${IMG_DB_VERSION}
 LABEL MAINTAINER="Ton Gomes"
 
 ## ARGs
-ARG DOCKER_ENV
 ARG WORK_DIR=/var/www
 ARG NODE_LTS_VERSION=16
 ARG DOCKER_USER_ID=1337
@@ -46,9 +45,9 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg ma
 
 ## Install MySQL Client
 # Get key from pgp.mit.edu or keyserver.ubuntu.com
-RUN echo "deb https://repo.mysql.com/apt/$(lsb_release -is | sed -e 's/\(.*\)/\L\1/')/ $(lsb_release -cs) mysql-8.0" >> /etc/apt/sources.list.d/mysql.list \
-  && apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29 \
-  && apt-get update && apt-get install -f -y --no-install-recommends mysql-client
+# RUN echo "deb https://repo.mysql.com/apt/$(lsb_release -is | sed -e 's/\(.*\)/\L\1/')/ $(lsb_release -cs) mysql-8.0" >> /etc/apt/sources.list.d/mysql.list \
+#   && apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29 \
+#   && apt-get update && apt-get install -f -y --no-install-recommends mysql-client
 
 # Install PHP
 RUN add-apt-repository ppa:ondrej/php \
@@ -109,9 +108,9 @@ RUN chmod +x /usr/local/bin/docker-entry-point
 
 # Additional scripts
 COPY .docker/scripts/reload-permissions.sh /usr/bin/reload-permissions
-COPY .docker/scripts/before-start.sh /usr/bin/before-start
+COPY .docker/scripts/on-boot.sh /usr/bin/on-boot
 RUN chmod +x /usr/bin/reload-permissions \
-  && chmod +x /usr/bin/before-start
+  && chmod +x /usr/bin/on-boot
 
 EXPOSE 80
 EXPOSE 443

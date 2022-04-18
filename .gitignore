@@ -16,5 +16,5 @@
 **/.env*
 **/!.env.example
 
-# Files
-WIKI.md
+# Docker local dev volumes
+/.docker/storage/

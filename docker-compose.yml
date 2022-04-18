@@ -1,12 +1,31 @@
 version: '3.8'
 
 services:
+  pgsql_service:
+    image: postgres:14.0-bullseye
+    user: '1000:1000'
+    container_name: '${DB_PGSQL_HOST}'
+    environment:
+      - POSTGRES_USER=${DB_PGSQL_USER?Please set DB_PGSQL_USER in .env file}
+      - POSTGRES_PASSWORD=${DB_PGSQL_PASSWORD?Please set DB_PGSQL_PASSWORD in
+        .env file}
+      - POSTGRES_DB=${DB_PGSQL_DB_NAME?Please set DB_PGSQL_DB_NAME in .env file}
+      - POSTGRES_PORT=${DB_PGSQL_PORT?Please set DB_PGSQL_PORT in .env file}
+    tty: true
+    ports:
+      - '${DOCKER_PGSQL_HOST_EXPOSED_PORT}:${DB_PGSQL_PORT}'
+    restart: always
+    volumes:
+      - .docker/storage/pgsql/:/var/lib/postgresql/data/
+    networks:
+      - application_internal_network
+
   webserver_service:
     build:
       context: .
       dockerfile: .docker/services/webservice/Dockerfile
-      args:
-        - DOCKER_ENV=${DOCKER_ENV?Please set DOCKER_ENV in .env file}
+    depends_on:
+      - pgsql_service
     tty: true
     restart: always
     networks:
